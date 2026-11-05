@@ -1,1 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Priyasha's Little World 💗</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--night:#241238;--plum:#3d1f5c;--rose:#ff8fb1;--cream:#fff3e6;--mint:#8fe3c8;--gold:#ffd37a;}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:'Fredoka',system-ui,sans-serif;color:var(--cream);background:radial-gradient(ellipse at 50% 0%,#5b2a86 0%,var(--plum) 40%,var(--night) 100%);overflow-x:hidden;min-height:100vh}
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold);animation:tw 3s infinite ease-in-out}
+@keyframes tw{50%{opacity:.15;transform:scale(.5)}}
+.petal{position:fixed;top:-30px;font-size:18px;z-index:1;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+section{position:relative;z-index:2;min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+section.on{display:flex;animation:in .8s ease}
+@keyframes in{from{opacity:0;transform:scale(.96)}}
+h1,h2{font-family:'Pacifico',cursive;font-weight:400;color:var(--rose);text-shadow:0 0 24px #ff8fb166}
+h1{font-size:clamp(34px,8vw,64px);line-height:1.25}
+h2{font-size:clamp(26px,6vw,42px)}
+p{line-height:1.6}
+.btn{font:inherit;font-weight:500;font-size:18px;border:0;border-radius:999px;padding:14px 30px;background:var(--rose);color:#4a1230;cursor:pointer;box-shadow:0 6px 0 #c4547c;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #c4547c}
+.btn:focus-visible,input:focus-visible,.portal:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+/* Coco */
+.coco{width:150px;cursor:pointer;animation:hop 2.4s infinite ease-in-out;filter:drop-shadow(0 10px 18px #0006)}
+.coco.big{width:190px}
+@keyframes hop{0%,100%{transform:translateY(0)}45%{transform:translateY(-14px)}}
+.coco .eye{animation:blink 4s infinite;transform-origin:center;transform-box:fill-box}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.bubble{position:relative;background:var(--cream);color:#5a2a45;border-radius:22px;padding:14px 20px;max-width:340px;margin-top:14px;font-weight:500;min-height:52px}
+.bubble:before{content:"";position:absolute;top:-10px;left:50%;margin-left:-10px;border:10px solid transparent;border-top:0;border-bottom-color:var(--cream)}
+/* lock */
+#pass{font:inherit;font-size:26px;letter-spacing:.35em;text-align:center;width:min(300px,80vw);padding:12px;border-radius:18px;border:3px solid var(--rose);background:#ffffff14;color:var(--cream);margin:22px 0 16px}
+.shake{animation:sh .45s}
+@keyframes sh{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.hint{opacity:.75;font-size:15px;margin-top:14px}
+/* world */
+#world{justify-content:flex-start;padding-top:36px}
+.map{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;margin:26px 0}
+.portal{width:210px;padding:22px 14px;border-radius:28px;background:linear-gradient(160deg,#ffffff1f,#ffffff08);border:2px solid #ffffff30;cursor:pointer;font:inherit;color:inherit;transition:transform .25s;animation:float 5s infinite ease-in-out}
+.portal:nth-child(2){animation-delay:-1.6s}.portal:nth-child(3){animation-delay:-3.2s}
+@keyframes float{50%{transform:translateY(-12px)}}
+.portal:hover{transform:scale(1.06) rotate(-1deg)}
+.portal .ico{font-size:54px;display:block}
+.portal b{display:block;font-size:20px;margin:8px 0 2px;color:var(--gold)}
+.portal small{opacity:.8}
+.portal.locked{filter:grayscale(.8);opacity:.55}
+/* chapter overlay */
+#chap{position:fixed;inset:0;z-index:20;background:#1a0b2ae6;backdrop-filter:blur(6px);display:none;overflow:auto;padding:28px 18px}
+#chap.on{display:block;animation:in .5s}
+.chapin{max-width:760px;margin:0 auto;text-align:center}
+.date{display:inline-block;margin:10px 0 18px;padding:6px 18px;border-radius:999px;background:var(--gold);color:#5a3b00;font-weight:600}
+.story{max-width:520px;margin:0 auto 22px;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin:20px 0 26px}
+.slot{aspect-ratio:3/4;border-radius:22px;overflow:hidden;background:#ffffff14;border:3px dashed #ffffff40;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;transition:transform .3s}
+.slot:nth-child(odd){transform:rotate(-2deg)}.slot:nth-child(even){transform:rotate(2deg)}
+.slot:hover{transform:rotate(0) scale(1.04)}
+.slot img{width:100%;height:100%;object-fit:cover;display:block}
+.slot.has{border:6px solid var(--cream);border-bottom-width:26px;border-radius:6px;background:var(--cream)}
+.slot span{padding:14px;font-size:15px;opacity:.85}
+.slot input{display:none}
+.cap{position:absolute;bottom:-22px;left:0;right:0;color:#7a3d5e;font-size:13px;font-weight:500}
+.close{position:fixed;top:14px;right:14px;z-index:30;background:#ffffff22;color:var(--cream);border:0;border-radius:50%;width:44px;height:44px;font-size:22px;cursor:pointer}
+/* promises */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:22px 0}
+.card{min-height:130px;border-radius:22px;border:2px solid #ffffff30;background:#ffffff10;font:inherit;color:inherit;font-size:16px;padding:16px;cursor:pointer;transition:.4s}
+.card.open{background:linear-gradient(160deg,var(--rose),#c77dff);color:#3b0d2c;font-weight:500;transform:rotateY(360deg)}
+.fx{position:fixed;z-index:50;pointer-events:none;font-size:26px;animation:rise 2.2s ease-out forwards}
+@keyframes rise{to{transform:translate(var(--dx),-85vh) rotate(var(--r));opacity:0}}
+.note{position:fixed;bottom:12px;left:0;right:0;z-index:3;text-align:center;font-size:12px;opacity:.5}
+#since{margin:10px 0 0;padding:12px 22px;border-radius:22px;background:#ffffff14;border:2px solid #ffffff26}
+#since .row{font-size:20px;color:var(--gold);font-weight:600}
+#since small{display:block;opacity:.8;margin-top:2px}
+#mus{display:none;position:fixed;top:14px;left:14px;z-index:40;width:44px;height:44px;border-radius:50%;border:0;background:#ffffff22;color:var(--cream);font-size:20px;cursor:pointer}
+canvas#game{width:min(360px,92vw);aspect-ratio:3/4;border-radius:24px;border:3px solid var(--rose);touch-action:none;background:#1a0b2a;cursor:none}
+.score{font-size:20px;margin:10px 0;color:var(--gold);font-weight:600}
+#wipe{position:fixed;left:50%;top:50%;width:50px;height:50px;margin:-25px;border-radius:50%;background:var(--rose);z-index:100;pointer-events:none;transform:scale(0)}
+#wipe.go{animation:wipe 1s ease-in-out}
+@keyframes wipe{0%{transform:scale(0);opacity:1}45%{transform:scale(70);opacity:1}100%{transform:scale(70);opacity:0}}
+.ch{display:inline-block;white-space:pre;animation:chpop .7s backwards cubic-bezier(.3,1.7,.5,1)}
+@keyframes chpop{from{transform:translateY(60px) scale(.1) rotate(-30deg);opacity:0}}
+@keyframes pop{from{transform:scale(.3) rotate(25deg);opacity:0}}
+.slot{animation:pop .7s backwards}.slot:nth-child(2){animation-delay:.15s}.slot:nth-child(3){animation-delay:.3s}
+.ear{transform-box:fill-box;transform-origin:50% 100%;animation:ear 4s infinite ease-in-out}
+@keyframes ear{0%,75%,100%{transform:rotate(0)}83%{transform:rotate(-9deg)}91%{transform:rotate(6deg)}}
+.date{cursor:pointer}
+#world{overflow:hidden}
+#world>*{position:relative;z-index:1}
+#world>#scene{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.hill{position:absolute;bottom:-90px;border-radius:50%}
+.h1{left:-15%;width:75%;height:230px;background:#2f6b5a}.h2{right:-20%;width:80%;height:200px;background:#3a8a6e}
+.ff{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffe98a;box-shadow:0 0 10px 3px #ffe98a;animation:ff 7s infinite ease-in-out}
+@keyframes ff{0%,100%{transform:translate(0,0);opacity:.15}50%{transform:translate(var(--x),var(--y));opacity:1}}
+.cl{position:absolute;font-size:64px;opacity:.55;animation:drift linear infinite}
+.hid.cl{opacity:.95}
+@keyframes drift{from{transform:translateX(-20vw)}to{transform:translateX(120vw)}}
+.hid{position:absolute;pointer-events:auto;background:none;border:0;cursor:pointer;font-size:46px;line-height:1;filter:drop-shadow(0 0 10px #ffe98a88);transition:transform .2s}
+.hid:hover{transform:scale(1.25) rotate(8deg)}
+.hid.done{filter:grayscale(.7) opacity(.5)}
+.moon{font-size:72px;animation:glow 4s infinite ease-in-out}
+@keyframes glow{50%{filter:drop-shadow(0 0 22px #fff3b0)}}
+.bal{animation:bob 5s infinite ease-in-out}
+@keyframes bob{50%{transform:translateY(-22px) rotate(4deg)}}
+.sway{transform-origin:50% 100%;animation:sway 3s infinite ease-in-out}
+@keyframes sway{50%{transform:rotate(9deg)}}
+.fly{animation:fly 22s linear infinite}
+@keyframes fly{0%{transform:translate(-10vw,0)}25%{transform:translate(25vw,-60px)}50%{transform:translate(55vw,30px)}75%{transform:translate(85vw,-50px)}100%{transform:translate(115vw,0)}}
+.twk{animation:tw 2.5s infinite}
+#foundbar{margin:16px 0 130px;font-weight:600;color:var(--gold)}
+#foundbar .btn{font-size:16px;padding:10px 20px;margin-top:10px}
+#qa{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:#150a2399;backdrop-filter:blur(4px);padding:20px}
+#qa.on{display:flex;animation:in .3s}
+.qbox{background:linear-gradient(160deg,#742bc7,#2a1445);border:3px solid var(--rose);border-radius:30px;padding:22px;max-width:420px;width:100%;text-align:center;animation:pop .5s}
+.qbox .coco{width:90px;animation-duration:1.6s}
+.qbox h3{font-size:21px;font-weight:500;margin:8px 0 14px;color:var(--gold);line-height:1.4}
+.opt{display:block;font:inherit;font-size:17px;width:100%;margin:10px 0;padding:12px;border-radius:18px;border:2px solid #ffffff40;background:#ffffff14;color:var(--cream);cursor:pointer;transition:background .2s,color .2s,transform .25s}
+.opt:hover{background:var(--rose);color:#4a1230}
+#qr{min-height:26px;margin:8px 0;color:var(--cream)}
+.paper{max-width:560px;margin:20px auto;background:var(--cream);color:#5a2a45;font-family:'Pacifico',cursive;font-size:19px;line-height:2;padding:28px 26px;border-radius:12px;transform:rotate(-1deg);box-shadow:0 14px 40px #0008;text-align:left;animation:pop .8s}
+body.day{background:linear-gradient(#4aa3df,#9ad0f5 55%,#ffd1e3);color:#0d1bdd}
+body.sunset{background:linear-gradient(#ff9a8b,#c77dff 60%,#7c1ad1)}
+body.day .star{opacity:0!important}
+body.day h1,body.day h2{color:#d6336c;text-shadow:none}
+body.day .portal b,body.day #since .row,body.day #foundbar{color:#8a3b00}
+.map .portal{width:168px;padding:16px 10px}.portal .ico{font-size:44px}
+.tr{position:fixed;z-index:90;pointer-events:none;font-size:16px;animation:trf .9s forwards}
+@keyframes trf{to{transform:translateY(-30px) scale(.3);opacity:0}}
+#nextc{color:var(--cream)}
+#walker{position:absolute;left:46%;bottom:9%;font-size:44px;transition:left 1s ease,top 1s ease;z-index:2}
+#walker.go{animation:wh .35s infinite}@keyframes wh{50%{margin-top:-14px}}
+.bigheart{font-size:110px;background:none;border:0;cursor:pointer;animation:beat 1.2s infinite}
+@keyframes beat{50%{transform:scale(1.15)}}
+#film{position:relative;height:min(62vh,520px);margin:18px auto;max-width:420px;border-radius:24px;overflow:hidden;background:#0006;display:flex;align-items:center;justify-content:center;font-size:90px}
+#film img{width:100%;height:100%;object-fit:cover;animation:kb 3.8s ease-out forwards}
+@keyframes kb{from{transform:scale(1);opacity:0}15%{opacity:1}to{transform:scale(1.15)}}
+.fcap{position:absolute;left:0;right:0;bottom:0;padding:50px 16px 16px;background:linear-gradient(transparent,#000a);font-size:24px;font-family:'Pacifico',cursive;color:var(--cream)}
+.fcap small{display:block;font-family:'Fredoka',sans-serif;font-size:14px;opacity:.8}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:420px;margin:0 auto}
+.mc{aspect-ratio:1;border-radius:16px;border:2px solid #ffffff40;background:#ffffff14;font-size:34px;cursor:pointer;position:relative;overflow:hidden;color:#5a2a45}
+.mc .b{display:none}.mc.up .f{display:none}
+.mc.up .b{display:flex;align-items:center;justify-content:center;position:absolute;inset:0;background:var(--cream)}
+.mc .b img{width:100%;height:100%;object-fit:cover}
+.dpad{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.dpad button{width:56px;height:48px;border-radius:14px;border:0;background:#ffffff26;color:var(--cream);font-size:20px;cursor:pointer}
+.dpad div{display:flex;gap:6px}
+.wish{display:flex;gap:8px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.wish input{font:inherit;padding:12px 16px;border-radius:999px;border:2px solid var(--rose);background:#ffffff14;color:var(--cream);width:min(280px,70vw)}
+.lantern{position:fixed;bottom:-60px;z-index:70;font-size:44px;text-align:center;animation:lant 9s ease-in forwards;pointer-events:none}
+.lantern small{display:block;font-size:13px;max-width:120px;color:var(--cream)}
+@keyframes lant{to{transform:translateY(-115vh) rotate(8deg)}}
+.fr{display:flex;flex-wrap:wrap;justify-content:center;margin:10px 0}.fr .opt{width:auto;display:inline-block;margin:6px}
+.cake{font-size:110px}.candles{display:flex;justify-content:center;gap:10px;margin:8px 0 18px}
+.cdl{background:none;border:0;font-size:38px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="sky"></div>
 
+<!-- 1. LOCK -->
+<section id="lock" class="on">
+  <svg class="coco big" data-coco viewBox="0 0 200 220" aria-label="Coco the baby rabbit"></svg>
+  <h1>Psst… Priyasha</h1>
+  <div class="bubble" id="lockSay">I'm Coco! The door only opens with a special number…</div>
+  <input id="pass" type="password" inputmode="numeric" maxlength="8" placeholder="••••••••" aria-label="Password">
+  <button class="btn" id="go">Open the door 🔑</button>
+  <p class="hint">Hint from Coco: the day our story began (ddmmyyyy) 💗</p>
+</section>
+
+<!-- 2. HELLO -->
+<section id="hello">
+  <svg class="coco big" data-coco viewBox="0 0 200 220"></svg>
+  <h1 id="hi"></h1>
+  <div class="bubble" id="helloSay">Hehe, I'm Coco, your guide. Follow me — this whole world was made just for you!</div>
+  <br><button class="btn" id="enter">Enter our world ✨</button>
+</section>
+
+<!-- 3. WORLD -->
+<section id="world">
+  <div id="scene"></div>
+  <h2>Priyasha's Magic World</h2>
+  <div id="since" aria-live="off"><div class="row" id="sinceRow"></div><small>since the day we met 💗</small><small id="nextc"></small></div>
+  <div class="map">
+    <button class="portal" data-ch="0"><span class="ico">🌙</span><b>Our First Date</b><small>20 · 10 · 2026</small></button>
+    <button class="portal" data-ch="1"><span class="ico">💋</span><b>Our Sweet Memories</b><small>31 · 10 · 2026</small></button>
+    <button class="portal" data-ch="2"><span class="ico">🌈</span><b>Our Life Together</b><small>to be explored…</small></button>
+    <button class="portal" data-ch="3"><span class="ico">🎮</span><b>Coco's Star Hunt</b><small>mini game</small></button>
+  </div>
+  <svg class="coco" data-coco viewBox="0 0 200 220"></svg>
+  <div class="bubble" id="worldSay">Look closely, Priyasha! 10 surprises are hiding in this world 👀🐰</div>
+  <div id="foundbar">🔍 Surprises found: <b id="fc">0</b>/<span id="ft">11</span><br><button class="btn" id="letter" style="display:none">Open Coco’s secret letter 💌</button></div>
+</section>
+
+<!-- CHAPTER OVERLAY -->
+<div id="wipe">💗</div>
+<div id="qa"><div class="qbox"><svg class="coco" data-coco viewBox="0 0 200 220"></svg><h3 id="qq"></h3><div id="qo"></div><p id="qr"></p><button class="btn" id="qx" style="display:none">Yay 💗</button></div></div>
+<button id="mus" aria-label="Toggle music">🔊</button>
+<div id="chap"><button class="close" id="close" aria-label="Close">✕</button><div class="chapin" id="chapin"></div></div>
+<p class="note">made with love for Priyasha 💗</p>
+
+<script>
+/* ================= EDIT HERE ================= */
+const PASSWORD = "20102026";
+const CH = [
+ { icon:"🌙", title:"Our First Date", date:"20 October 2026",
+   story:"The day everything started. Nervous smiles, endless talking, and a feeling that said “this is someone special.” Coco was hiding behind a flower and saw it all! 🌸",
+   coco:"Aww, that was the day my favourite love story began!",
+   photos:["first-1.jpeg","first-2.jpeg","first-3.jpeg"],
+   caps:["our first photo","that smile 😍","us 💗"] },
+ { icon:"💋", title:"Our Sweet Memories", date:"31 October 2026",
+   story:"Our second date — the one with the butterflies and our kisses. An endless talking night, but the only magic I needed was you. 💞",
+   coco:"Coco is blushing… I'll close my eyes now 🙈",
+   photos:["second-1.jpeg","second-2.jpeg","second-3.jpeg"],
+   caps:["so happy","kiss time 💋","forever mine"] },
+];
+const PROMISES = [
+ "I promise to hold your hand through every adventure 🤝",
+ "I'll make you laugh on your sad days 😄",
+ "Many more dates, many more places, one together 🌍",
+ "Late-night talks and sleepy good mornings ☁️",
+ "You + me + Coco = the best team 🐰",
+ "Our life is a story and we write it together 📖"
+];
+const LETTER = "My dearest Priyasha,<br><br>You found every secret hiding in this little world, just like you found a place in my heart. Since 20 October 2026 every day feels softer, brighter and a bit more magical.<br><br>Thank you for the smiles, the dates and the kisses that I’ll never forget. This is only the first page of our story, and I want to write all the rest with you.<br><br>Forever yours,<br>Your Coco’s favourite human 💗";
+// hidden surprises: e = emoji, pos = where it hides, q = question, o = answers, right = correct answer (optional), run = answer that dodges, r = reply
+const S = [
+ {id:'moon',e:'🌙',cls:'moon',pos:'right:6%;top:2%',hint:'The moon looks like it wants to whisper something… 🌙',q:'The moon whispers: “Who is Coco’s favourite girl in the whole world?”',o:['Me? 🥺','Priyasha!','Coco 😏'],r:'Correct! It’s you, Priyasha. Always you 💗'},
+ {id:'bal',e:'🎈',cls:'bal',pos:'left:4%;top:26%',hint:'A balloon is floating by… catch it! 🎈',q:'Will you be my girlfriend forever and ever?',o:['Yes, forever 💖','No'],run:1,r:'Signed in the stars! ✍️ Forever it is, my love 💖'},
+ {id:'cloud',e:'☁️',cls:'cl',pos:'top:7%;animation-duration:50s;animation-delay:-12s',hint:'One cloud is wearing a tiny secret… ☁️',q:'Quiz time! When was our very first date?',o:['14 October','20 October','31 October'],right:1,r:'Yes! 20 October 2026, the day my favourite story began 🌙'},
+ {id:'flower',e:'🌷',cls:'sway',pos:'bottom:6%;left:8%',hint:'One flower is shaking more than the others… 🌷',q:'What do I love doing most with you?',o:['Talking for hours','Holding your hand','Literally everything 💞'],r:'Same! Every moment with you is my favourite 🥰'},
+ {id:'mush',e:'🍄',pos:'bottom:5%;left:44%',hint:'Something red is hiding in the grass… 🍄',q:'How many kisses do I deserve today?',o:['1 💋','10 💋','Infinite 💋💋💋'],r:'Coco is counting… blushing… okay, granted! 😳💋'},
+ {id:'gift',e:'🎁',pos:'bottom:6%;right:8%',hint:'A little gift is waiting near the hills 🎁',q:'Close your eyes… what’s inside the gift?',o:['Chocolates 🍫','A big hug 🤗','His whole heart 💗'],r:'Surprise! It’s all three, and the hug is coming soon 🤗🍫💗'},
+ {id:'bfly',e:'🦋',cls:'fly',pos:'top:44%;left:0',hint:'A butterfly keeps flying across the sky 🦋',q:'What did you feel when we first met?',o:['Butterflies 🦋','Shy 🙈','Like home 🏡'],r:'Me too. Meeting you felt like coming home 💞'},
+ {id:'star',e:'⭐',cls:'twk',pos:'right:24%;top:14%',hint:'One star is twinkling extra hard ⭐',q:'A shooting star! Make a wish. Which one?',o:['More dates 🌹','More hugs 🤗','Forever with you ♾️'],r:'Coco sent your wish to the universe… it’s already on the way 🌠'},
+ {id:'voice',e:'🎙️',pos:'left:31%;bottom:10%',hint:'Something is whispering near the flowers… 🎙️',act:()=>voice()},
+ {id:'date0',hint:'Psst… try tapping the date badge inside a memory page 👀',q:'What was the first thing you noticed about me?',o:['My smile','My eyes','My terrible jokes 😂'],r:'I noticed yours too. I never stopped smiling after 🥰'},
+ {id:'date1',hint:'Psst… try tapping the date badge inside a memory page 👀',q:'Which memory should we repeat?',o:['The first date','Halloween night','Both, again and again 💞'],r:'Coco is booking the tickets already! 🎟️'}
+];
+const MEET = new Date(2026, 9, 20);   // 20 Oct 2026 (month is 0-based)
+const SONG = "song.mp3";               // optional real song, e.g. "song.mp3" next to this file (empty = Coco's own lullaby)
+const VOICE = "voice.mp3";     // your voice note, put it next to this file
+const BDAY = [2,3];             // her birthday as [month, day], e.g. [3, 14] = 14 March. Preview any time with  file.html#bday
+const NEXT = {label:"our 1-month anniversary", date:new Date(2026, 10, 20)};
+const STORY = ["Once upon a time, in a big busy world…","two people met, and it felt like pure magic ✨","On 20 October 2026 they went on their very first date 🌙","Nervous smiles, endless talking… and time simply flew away ⏰","On 31 October came the sweetest night, full of talking and kisses 💋","And Coco? Coco was hiding behind a flower, seeing EVERYTHING 🙈","But the best part is… this story has only just begun 💞"];
+const REASONS = ["Your smile makes my whole day brighter 😊","You listen to me like I’m the only one in the world 💗","You make ordinary moments feel magical ✨","Your laugh is my favourite sound 🎶","With you, I feel at home 🏡","You are kind, beautiful and brave 🌸","You make me want to be a better person 🌱","Because you are simply you, Priyasha 💖"];
+const WHEN = [
+ {t:"Open when you miss me 🥺",x:"Close your eyes and imagine my arms around you. I’m always one message away, and I’m thinking of you right now. 💗"},
+ {t:"Open when you can’t sleep 🌙",x:"Count the stars instead of sheep, and let each star be one reason I love you. Sleep well, my love. ✨"},
+ {t:"Open when you’re sad ☁️",x:"This feeling will pass, and I’m right here with you. You are stronger and more loved than you know. 🌈"},
+ {t:"Open when you’re happy 🌸",x:"Yay! I love seeing you happy. Keep smiling, because your smile is my favourite thing in the world. 😍"}
+];
+const GOAL = 20;                      // stars needed to win the game
+const SECRET = "You caught every star, Priyasha! Here is Coco's secret: the brightest star in this whole sky is you. I love you, now and always 💖";
+/* ============================================= */
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+// Coco drawing
+const COCO=`<defs><radialGradient id="g" cx=".4" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ffe3ee"/></radialGradient></defs>
+<ellipse cx="100" cy="205" rx="50" ry="9" fill="#0004"/>
+<g class="ear"><ellipse cx="70" cy="50" rx="17" ry="46" fill="url(#g)" transform="rotate(-10 70 50)"/><ellipse cx="70" cy="52" rx="8" ry="32" fill="#ffb5cb" transform="rotate(-10 70 50)"/></g>
+<g class="ear"><ellipse cx="130" cy="50" rx="17" ry="46" fill="url(#g)" transform="rotate(10 130 50)"/><ellipse cx="130" cy="52" rx="8" ry="32" fill="#ffb5cb" transform="rotate(10 130 50)"/></g>
+<ellipse cx="100" cy="160" rx="48" ry="44" fill="url(#g)"/>
+<circle cx="100" cy="112" r="50" fill="url(#g)"/>
+<g class="eye"><ellipse cx="80" cy="108" rx="7" ry="9" fill="#3b1d3a"/><circle cx="82" cy="105" r="2.6" fill="#fff"/></g>
+<g class="eye"><ellipse cx="120" cy="108" rx="7" ry="9" fill="#3b1d3a"/><circle cx="122" cy="105" r="2.6" fill="#fff"/></g>
+<ellipse cx="66" cy="126" rx="10" ry="6" fill="#ff9db8" opacity=".7"/><ellipse cx="134" cy="126" rx="10" ry="6" fill="#ff9db8" opacity=".7"/>
+<path d="M95 121 q5 6 10 0 z" fill="#ff7aa2"/><path d="M100 126 q-6 9 -13 5 M100 126 q6 9 13 5" stroke="#b55a7a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<path d="M78 150 l22 20 22-20 -11-8h-22z" fill="#ff8fb1"/><circle cx="100" cy="166" r="6" fill="#ffd37a"/>
+<ellipse cx="62" cy="185" rx="14" ry="10" fill="url(#g)"/><ellipse cx="138" cy="185" rx="14" ry="10" fill="url(#g)"/>`;
+$$('[data-coco]').forEach(s=>{s.innerHTML=COCO.replace(/id="g"/g,'id="g'+Math.random().toString(36).slice(2,5)+'"')});
+// gradient ids must match per-svg: simplest is a single shared def
+$$('[data-coco]').forEach((s,i)=>{const id='g'+i;s.innerHTML=COCO.replace(/id="g"/,`id="${id}"`).replace(/url\(#g\)/g,`url(#${id})`)});
+
+// stars + petals
+for(let i=0;i<70;i++){const s=document.createElement('i');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s`;$('#sky').appendChild(s)}
+setInterval(()=>{const p=document.createElement('div');p.className='petal';p.textContent=['🌸','💗','✨','🌷'][Math.random()*4|0];p.style.left=Math.random()*100+'vw';p.style.animationDuration=7+Math.random()*6+'s';document.body.appendChild(p);setTimeout(()=>p.remove(),14000)},900);
+
+function burst(emojis=['💗','✨','🌸','💖','🐰'],n=26){for(let i=0;i<n;i++){const e=document.createElement('div');e.className='fx';e.textContent=emojis[Math.random()*emojis.length|0];e.style.left=(30+Math.random()*40)+'vw';e.style.bottom='10vh';e.style.setProperty('--dx',(Math.random()*60-30)+'vw');e.style.setProperty('--r',(Math.random()*720-360)+'deg');e.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3000)}}
+function show(id){const w=$('#wipe');w.classList.remove('go');void w.offsetWidth;w.classList.add('go');setTimeout(()=>{$$('section').forEach(s=>s.classList.remove('on'));$('#'+id).classList.add('on');window.scrollTo(0,0)},420)}
+function pop(el,t){el.innerHTML='';[...t].forEach((c,i)=>{const x=document.createElement('span');x.textContent=c;x.className='ch';x.style.animationDelay=i*.07+'s';el.appendChild(x)})}
+function type(el,txt,i=0){el.textContent=txt.slice(0,i);if(i<=txt.length)setTimeout(()=>type(el,txt,i+1),70)}
+
+// lock
+function tryPass(){
+  if($('#pass').value.trim()===PASSWORD){burst();show('hello');pop($('#hi'),'Hello baby girl 💕')}
+  else{const p=$('#pass');p.classList.remove('shake');void p.offsetWidth;p.classList.add('shake');$('#lockSay').textContent=['Hmm, not that one! Think about our first date 🥺','Almost! Try ddmmyyyy 💭','Coco believes in you, Priyasha! 🐰'][Math.random()*3|0];p.value=''}
+}
+$('#go').onclick=tryPass;$('#pass').onkeydown=e=>{if(e.key==='Enter')tryPass()};
+$('#enter').onclick=()=>{burst(['🌙','✨','💫']);show('world');startMusic()};
+
+// Coco is tickly
+const lines=['Hehe, that tickles! 🐰','You are the prettiest girl in this whole world 💗','Coco loves you too, Priyasha!','Psst… he thinks about you all day 🤫','Hop hop! Want a hug? 🤗'];
+$$('[data-coco]').forEach(c=>c.onclick=()=>{burst(['💗','🐰']);const b=c.parentElement.querySelector('.bubble');if(b)b.textContent=lines[Math.random()*lines.length|0]});
+
+// photo slot
+function slot(src,cap){
+  const d=document.createElement('label');d.className='slot';
+  const ph=()=>{d.className='slot';d.innerHTML=`<span>📷 Tap to add your photo<br><small>or save it as ${src}</small></span><input type="file" accept="image/*">`;bind()};
+  const bind=()=>{const f=d.querySelector('input');if(f)f.onchange=()=>{const u=URL.createObjectURL(f.files[0]);d.className='slot has';d.innerHTML=`<img src="${u}" alt="${cap}"><div class="cap">${cap}</div>`}};
+  const img=new Image();img.alt=cap;
+  img.onload=()=>{d.className='slot has';d.innerHTML='';d.append(img);d.insertAdjacentHTML('beforeend',`<div class="cap">${cap}</div>`)};
+  img.onerror=ph;img.src=src;ph();return d;
+}
+
+// chapters
+function openChapter(i){
+  const w=$('#chapin');w.innerHTML='';
+  if(i<2){
+    const c=CH[i];
+    w.innerHTML=`<svg class="coco" data-coco viewBox="0 0 200 220"></svg><h2>${c.title}</h2><div class="date">${c.date}</div><p class="story">${c.story}</p><div class="grid"></div><div class="bubble" style="margin:0 auto 24px">${c.coco}</div><button class="btn" id="more">More magic ✨</button>`;
+    c.photos.forEach((p,k)=>w.querySelector('.grid').appendChild(slot(p,c.caps[k])));
+    $('#more').onclick=()=>burst(['💋','💗','🌸','✨']);
+    w.querySelector('.date').onclick=()=>ask(S.find(x=>x.id==='date'+i));
+  }else if(i===3){gameUI(w);
+  }else{
+    w.innerHTML=`<svg class="coco" data-coco viewBox="0 0 200 220"></svg><h2>Our Life Together 🌈</h2><p class="story">This part of the world is still hidden in fog. Tap every card to uncover our promises, Priyasha…</p><div class="cards"></div><div class="bubble" id="fin" style="margin:0 auto;display:none">You found them all! Our story has only just begun… I love you, Priyasha. Forever & always 💖 — Coco & me</div>`;
+    let n=0;PROMISES.forEach(t=>{const b=document.createElement('button');b.className='card';b.textContent='🎁 Tap me';b.onclick=()=>{if(b.classList.contains('open'))return;b.classList.add('open');b.textContent=t;burst(['💗'],6);if(++n===PROMISES.length){$('#fin').style.display='block';burst(['💖','🌈','✨','🐰','🌸'],50)}};w.querySelector('.cards').appendChild(b)});
+  }
+  const s=w.querySelector('[data-coco]'),id='gc'+i;s.innerHTML=COCO.replace(/id="g"/,`id="${id}"`).replace(/url\(#g\)/g,`url(#${id})`);
+  $('#chap').classList.add('on');$('#chap').scrollTop=0;
+}
+// ---- day / night sky
+const hr=new Date().getHours(),MODE=(hr>=6&&hr<17)?'day':((hr>=17&&hr<19)||hr===5)?'sunset':'night';document.body.classList.add(MODE);
+const saveFound=()=>{try{localStorage.setItem('priyasha-found',JSON.stringify([...found]))}catch(e){}};
+// Coco's outfits unlock as surprises are found
+function dress(){const n=found.size;$$('[data-coco]').forEach(sv=>{if(sv.dataset.n==n&&sv.querySelector('.acc'))return;sv.querySelectorAll('.acc').forEach(x=>x.remove());sv.dataset.n=n;let h='';if(n>=3)h+=`<text class="acc" x="100" y="72" font-size="${n>=6?44:34}" text-anchor="middle">${n>=6?'👑':'🎀'}</text>`;if(n>=9)h+='<text class="acc" x="100" y="172" font-size="34" text-anchor="middle">🧣</text>';if(h)sv.insertAdjacentHTML('beforeend',h)})}
+setInterval(dress,1000);
+// voice note
+function voice(){const a=new Audio(VOICE);a.onerror=()=>ask({id:'voice',q:'Coco whispers: “Imagine his voice here, saying I love you, Priyasha 💗”',o:['Aww 🥰'],r:'He will say it in person soon! 💞'});
+  a.onplaying=()=>{if(!found.has('voice')){found.add('voice');saveFound();updateFound()}burst(['🎙️','💗','✨'],14);$('#worldSay').textContent='Shhh… listen to that voice 💗';if(mus.master)mus.master.gain.value=.04};
+  a.onended=()=>{if(mus.master)mus.master.gain.value=.16};a.play().catch(()=>{})}
+// ---- hidden surprises + questions
+let found=new Set();try{found=new Set(JSON.parse(localStorage.getItem('priyasha-found')||'[]'))}catch(e){}
+let letterShown=false;
+function updateFound(){dress();$('#fc').textContent=found.size;$('#ft').textContent=S.length;$('#letter').style.display=found.size===S.length?'inline-block':'none';$$('.hid').forEach(b=>b.classList.toggle('done',found.has(b.dataset.id)))}
+function closeQA(){$('#qa').classList.remove('on')}
+function ask(s){
+  $('#qq').textContent=s.q;$('#qr').textContent='';$('#qx').style.display='none';const box=$('#qo');box.innerHTML='';
+  s.o.forEach((t,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=t;
+    if(s.run===i){const dodge=()=>{b.style.transform=`translate(${Math.random()*160-80}px,${Math.random()*90-45}px)`;$('#qr').textContent='Hehe, that button is shy 🙈'};b.onmouseenter=dodge;b.onclick=dodge;b.ontouchstart=e=>{e.preventDefault();dodge()}}
+    else b.onclick=()=>{
+      if(s.right!=null&&i!==s.right){$('#qr').textContent='Hmm, not quite! Try again 🥺';b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');return}
+      box.innerHTML='';$('#qr').textContent=s.r;$('#qx').style.display='inline-block';burst();
+      if(!found.has(s.id)){found.add(s.id);try{localStorage.setItem('priyasha-found',JSON.stringify([...found]))}catch(e){}updateFound()}};
+    box.appendChild(b)});
+  $('#qa').classList.add('on')}
+$('#qx').onclick=()=>{closeQA();if(found.size===S.length&&!letterShown){letterShown=true;setTimeout(letter,500)}};
+$('#qa').onclick=e=>{if(e.target.id==='qa')closeQA()};
+function letter(){const w=$('#chapin');w.innerHTML=`<svg class="coco big" data-coco viewBox="0 0 200 220"></svg><h2>For Priyasha 💌</h2><div class="paper">${LETTER}</div><button class="btn" id="fw">More fireworks 🎆</button>`;setCoco(w);$('#chap').classList.add('on');$('#chap').scrollTop=0;const fw=()=>burst(['🎆','🎇','✨','💖','🌸'],70);fw();$('#fw').onclick=fw}
+$('#letter').onclick=letter;
+// scene
+const sc=$('#scene');sc.innerHTML='<div class="hill h1"></div><div class="hill h2"></div>';
+for(let i=0;i<16;i++){const f=document.createElement('i');f.className='ff';f.style.cssText=`left:${Math.random()*100}%;top:${25+Math.random()*60}%;--x:${Math.random()*80-40}px;--y:${Math.random()*80-40}px;animation-delay:${Math.random()*6}s`;sc.appendChild(f)}
+[['12%',70],['30%',95]].forEach(([t,d])=>{const c=document.createElement('span');c.className='cl';c.textContent='☁️';c.style.cssText=`top:${t};animation-duration:${d}s;animation-delay:-${d*Math.random()|0}s`;sc.appendChild(c)});
+for(let i=0;i<9;i++){const f=document.createElement('span');f.className='sway';f.textContent=['🌷','🌸','🌼','🌱'][i%4];f.style.cssText=`position:absolute;bottom:${1+Math.random()*3}%;left:${i*11+Math.random()*4}%;font-size:26px;animation-delay:-${Math.random()*3}s`;sc.appendChild(f)}
+S.forEach(s=>{if(!s.pos)return;const b=document.createElement('button');b.className='hid '+(s.cls||'');b.style.cssText=s.pos;b.textContent=(s.id==='moon'&&MODE==='day')?'☀️':s.e;b.setAttribute('aria-label','hidden surprise');b.dataset.id=s.id;b.onclick=()=>s.act?s.act():ask(s);sc.appendChild(b)});
+updateFound();$('#worldSay').textContent=`Look closely, Priyasha! ${S.length} surprises are hiding in this world 👀🐰`;
+setInterval(()=>{if(!$('#world').classList.contains('on')||$('#chap').classList.contains('on')||$('#qa').classList.contains('on'))return;const left=S.filter(x=>!found.has(x.id));if(left.length)$('#worldSay').textContent=left[Math.random()*left.length|0].hint},18000);
+
+// ---- soft background music (made live with WebAudio, no file needed)
+const mus={ctx:null,on:false,timer:null,step:0};
+const N={C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,C5:523.25,D5:587.33,E5:659.25,G5:783.99,A5:880,C6:1046.5};
+const MEL=[N.E5,N.G5,N.A5,N.G5,N.E5,N.D5,N.C5,N.D5, N.E5,N.G5,N.A5,N.C6,N.A5,N.G5,N.E5,N.G5, N.A5,N.G5,N.E5,N.D5,N.C5,N.D5,N.E5,N.D5, N.C5,N.E5,N.G5,N.E5,N.D5,N.C5,N.C5,0];
+const CHORDS=[[130.81,261.63,329.63,392],[110,220,261.63,329.63],[87.31,174.61,261.63,349.23],[98,196,246.94,293.66]];
+function tone(f,t,d,v,type){const o=mus.ctx.createOscillator(),g=mus.ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(mus.master);o.start(t);o.stop(t+d+.05)}
+function tick(){const t=mus.ctx.currentTime+.05,i=mus.step++;const m=MEL[i%MEL.length];if(m)tone(m,t,1.1,.5,'triangle');if(i%8===0){CHORDS[(i/8|0)%4].forEach(f=>tone(f,t,4.2,.16,'sine'))}}
+function synth(){
+  if(!mus.ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return;mus.ctx=new A();mus.master=mus.ctx.createGain();mus.master.gain.value=.16;
+    const dl=mus.ctx.createDelay(1);dl.delayTime.value=.42;const fb=mus.ctx.createGain();fb.gain.value=.35;mus.master.connect(mus.ctx.destination);mus.master.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(mus.ctx.destination)}
+  mus.ctx.resume();if(!mus.timer)mus.timer=setInterval(tick,520);mus.on=true;$('#mus').textContent='🔊';$('#mus').style.display='block'}
+function pauseSynth(){clearInterval(mus.timer);mus.timer=null;mus.ctx&&mus.ctx.suspend();mus.on=false;$('#mus').textContent='🔇'}
+function startMusic(){mus.on=true;$('#mus').style.display='block';$('#mus').textContent='🔊';
+  if(SONG&&mus.a!==false){if(!mus.a){mus.a=new Audio(SONG);mus.a.loop=true;mus.a.volume=.5;mus.a.onerror=()=>{mus.a=false;if(mus.on)synth()}}mus.a.play().catch(()=>{})}else synth()}
+function stopMusic(){pauseSynth();mus.a&&mus.a.pause()}
+$('#mus').onclick=()=>mus.on?stopMusic():startMusic();
+
+// ---- days since we met
+function since(){let d=Date.now()-MEET,ago=d>=0;d=Math.abs(d);const D=d/864e5|0,H=d/36e5%24|0,M=d/6e4%60|0,S=d/1e3%60|0;
+  $('#sinceRow').innerHTML=`${D} days ${H}h ${M}m ${S}s`;const nn=NEXT.date-Date.now();$('#nextc').textContent=nn>0?`⏳ ${Math.ceil(nn/864e5)} days until ${NEXT.label}`:nn>-864e5?`🎉 Today is ${NEXT.label}!`:''}
+since();setInterval(since,1000);
+
+// ---- Coco's Star Hunt (mini game)
+function gameUI(w){
+  w.innerHTML=`<svg class="coco" data-coco viewBox="0 0 200 220"></svg><h2>Coco's Star Hunt ⭐</h2><p class="story">Slide to move Coco (or use the arrow keys) and catch the falling stars. 💗 gives 2 points, 🍂 takes 1 away. Catch ${GOAL} to unlock Coco's secret!</p><div class="score" id="sc">⭐ 0 / ${GOAL}</div><canvas id="game" width="360" height="480"></canvas><div class="bubble" id="gsay" style="margin:16px auto">Ready? Move me, Priyasha! 🐰</div><div class="bubble" id="win" style="margin:0 auto 16px;display:none"></div><button class="btn" id="again" style="display:none">Play again 🔁</button>`;
+  const cv=$('#game'),cx=cv.getContext('2d');
+  let px=180,items=[],score=0,done=false,last=performance.now(),acc=0;const stars=Array.from({length:30},()=>[Math.random()*360,Math.random()*480,Math.random()*2+.5]);
+  const move=e=>{const r=cv.getBoundingClientRect();px=Math.max(26,Math.min(334,(e.clientX-r.left)/r.width*360))};
+  const key=e=>{if(e.key==='ArrowLeft')px=Math.max(26,px-28);if(e.key==='ArrowRight')px=Math.min(334,px+28)};
+  cv.addEventListener('pointermove',move);cv.addEventListener('pointerdown',move);document.addEventListener('keydown',key);
+  const say=t=>{const b=$('#gsay');if(b)b.textContent=t};
+  function loop(now){
+    if(!cv.isConnected||!$('#chap').classList.contains('on')){document.removeEventListener('keydown',key);return}
+    const dt=Math.min(.05,(now-last)/1000);last=now;
+    if(!done){acc+=dt;if(acc>.65){acc=0;const r=Math.random();items.push({x:20+Math.random()*320,y:-20,v:90+Math.random()*60+score*3,e:r<.18?'💗':r<.3?'🍂':'⭐'})}}
+    const g=cx.createLinearGradient(0,0,0,480);g.addColorStop(0,'#2a1445');g.addColorStop(1,'#5b2a86');cx.fillStyle=g;cx.fillRect(0,0,360,480);
+    cx.fillStyle='#ffd37a';stars.forEach(s=>cx.fillRect(s[0],s[1],s[2],s[2]));
+    cx.textAlign='center';cx.font='30px serif';
+    items.forEach(it=>{it.y+=it.v*dt;cx.fillText(it.e,it.x,it.y);
+      if(!done&&it.y>410&&it.y<470&&Math.abs(it.x-px)<38){it.hit=true;score=Math.max(0,score+(it.e==='💗'?2:it.e==='🍂'?-1:1));$('#sc').textContent=`⭐ ${score} / ${GOAL}`;
+        if(it.e==='🍂')say('Oops, a leaf! 🍂');else if(score>=GOAL){done=true;burst(['⭐','💖','🌸','🐰','✨'],60);$('#win').textContent=SECRET;$('#win').style.display='block';$('#again').style.display='inline-block';say('YAY! You did it! 🎉')}
+        else if(score%5===0)say(['So fast, Priyasha! ⚡','Coco is dizzy with joy 🐰','Keep going, my star! 🌟','Almost there! 💗'][Math.random()*4|0])}});
+    items=items.filter(it=>it.y<510&&!it.hit);
+    cx.font='54px serif';cx.fillText('🐰',px,462);
+    requestAnimationFrame(loop)}
+  requestAnimationFrame(loop);
+  $('#again').onclick=()=>gameUI(w)||setCoco(w);
+}
+function setCoco(w){const s=w.querySelector('[data-coco]');if(s)s.innerHTML=COCO.replace(/id="g"/,'id="gx"').replace(/url\(#g\)/g,'url(#gx)')}
+
+// ---- heart trail
+let lt=0;document.addEventListener('pointermove',e=>{const n=Date.now();if(n-lt<70)return;lt=n;const t=document.createElement('i');t.className='tr';t.textContent=['💗','✨','🌸'][Math.random()*3|0];t.style.left=e.clientX+'px';t.style.top=e.clientY+'px';document.body.appendChild(t);setTimeout(()=>t.remove(),900)});
+// ---- Coco walks to wherever you tap
+const wk=document.createElement('div');wk.id='walker';wk.textContent='🐰';sc.appendChild(wk);
+$('#world').addEventListener('click',e=>{if(e.target.closest('button,svg,.bubble,#since,#foundbar'))return;const r=$('#world').getBoundingClientRect();wk.style.bottom='auto';wk.style.left=(e.clientX-r.left-22)+'px';wk.style.top=(e.clientY-r.top-30)+'px';wk.classList.add('go');setTimeout(()=>wk.classList.remove('go'),1000)});
+// ---- extra chapters
+function page(t,html){const w=$('#chapin');w.innerHTML=`<svg class="coco" data-coco viewBox="0 0 200 220"></svg><h2>${t}</h2>${html}`;setCoco(w);$('#chap').classList.add('on');$('#chap').scrollTop=0;return w}
+const live=el=>el.isConnected&&$('#chap').classList.contains('on');
+function openExtra(k){
+ if(k==='story'){page('Our Story 📖','<div class="bubble" id="sb" style="margin:18px auto"></div><button class="btn" id="sn">Next ▶</button>');let i=0;const nx=()=>{if(i>=STORY.length){$('#sb').textContent='The End… and the beginning 💗';$('#sn').style.display='none';burst();return}$('#sb').textContent=STORY[i++]};$('#sn').onclick=nx;nx()}
+ else if(k==='reasons'){page('Why I Love You 💗','<p class="story">Tap the heart, again and again…</p><button id="bh" class="bigheart">💗</button><div class="bubble" id="rb" style="margin:14px auto">Tap me! 🥰</div>');let i=0;$('#bh').onclick=()=>{$('#rb').textContent=REASONS[i++%REASONS.length];burst(['💗'],8)}}
+ else if(k==='when'){page('Open When… 💌','<div class="cards" id="wc"></div><div class="paper" id="wp" style="display:none"></div>');WHEN.forEach(l=>{const b=document.createElement('button');b.className='card';b.textContent='💌 '+l.t;b.onclick=()=>{const p=$('#wp');p.style.display='block';p.innerHTML='<b>'+l.t+'</b><br><br>'+l.x;p.style.animation='none';void p.offsetWidth;p.style.animation='';burst(['💌','💗'],10);p.scrollIntoView({behavior:'smooth'})};$('#wc').appendChild(b)})}
+ else if(k==='film'){const all=[];CH.forEach(c=>c.photos.forEach((p,j)=>all.push({src:p,cap:c.caps[j],date:c.date})));page('Our Memory Film 🎞️','<div id="film"></div>');const f=$('#film');let i=0;
+  const go=()=>{if(!live(f))return;if(i>=all.length){f.innerHTML='<div class="fcap" style="position:static;background:none">The End… and the story continues 💗</div>';burst(['💗','🎞️','✨'],40);return}
+   const a=all[i++];f.innerHTML=`<img src="${a.src}" alt=""><div class="fcap">${a.cap}<small>${a.date}</small></div>`;const im=f.querySelector('img');im.onerror=()=>im.replaceWith('📷');setTimeout(go,3800)};go()}
+ else if(k==='match'){const em=['🌸','💗','🌙','💋','🌈','🐰'],srcs=CH.flatMap(c=>c.photos);page('Memory Match 🧩','<p class="story">Flip two cards to find the matching memories.</p><div class="mg" id="mg"></div><div class="score" id="ms">Moves: 0</div>');
+  const deck=srcs.flatMap((x,i)=>[i,i]).sort(()=>Math.random()-.5);let first=null,lock=false,moves=0,left=srcs.length;
+  deck.forEach(i=>{const c=document.createElement('button');c.className='mc';c.innerHTML=`<span class="f">💗</span><span class="b"><img src="${srcs[i]}" alt="" onerror="this.replaceWith('${em[i]}')"></span>`;
+   c.onclick=()=>{if(lock||c.classList.contains('up'))return;c.classList.add('up');if(!first){first=[c,i];return}moves++;$('#ms').textContent='Moves: '+moves;
+    if(first[1]===i){first=null;burst(['💗'],6);if(!--left){burst(['🎉','💖','🌸'],50);$('#ms').textContent='You did it in '+moves+' moves! 🎉'}}
+    else{lock=true;const a=first[0];first=null;setTimeout(()=>{a.classList.remove('up');c.classList.remove('up');lock=false},800)}};$('#mg').appendChild(c)})}
+ else if(k==='maze'){page('Love Maze 🌿','<p class="story">Help Coco reach the heart! Use arrow keys, swipe, or the buttons.</p><canvas id="mz" width="360" height="360" style="width:min(360px,92vw);border-radius:20px;background:#1a0b2a;border:3px solid var(--rose);touch-action:none"></canvas><div class="dpad"><button data-d="0">▲</button><div><button data-d="3">◀</button><button data-d="2">▼</button><button data-d="1">▶</button></div></div>');
+  const n=9,cs=40,wall=Array.from({length:n},()=>Array(n).fill(15)),seen=Array.from({length:n},()=>Array(n).fill(0)),dx=[0,1,0,-1],dy=[-1,0,1,0];
+  (function dfs(x,y){seen[y][x]=1;[0,1,2,3].sort(()=>Math.random()-.5).forEach(d=>{const a=x+dx[d],b=y+dy[d];if(a<0||b<0||a>=n||b>=n||seen[b][a])return;wall[y][x]&=~(1<<d);wall[b][a]&=~(1<<((d+2)%4));dfs(a,b)})})(0,0);
+  let px=0,py=0,won=false;const cv=$('#mz'),c=cv.getContext('2d');
+  const draw=()=>{c.fillStyle='#1a0b2a';c.fillRect(0,0,360,360);c.strokeStyle='#ff8fb1';c.lineWidth=3;c.lineCap='round';c.beginPath();for(let y=0;y<n;y++)for(let x=0;x<n;x++){const X=x*cs,Y=y*cs,m=wall[y][x];if(m&1){c.moveTo(X,Y);c.lineTo(X+cs,Y)}if(m&2){c.moveTo(X+cs,Y);c.lineTo(X+cs,Y+cs)}if(m&4){c.moveTo(X,Y+cs);c.lineTo(X+cs,Y+cs)}if(m&8){c.moveTo(X,Y);c.lineTo(X,Y+cs)}}c.stroke();c.font='26px serif';c.textAlign='center';c.textBaseline='middle';c.fillText('💗',(n-1)*cs+20,(n-1)*cs+20);c.fillText('🐰',px*cs+20,py*cs+20)};
+  const mv=d=>{if(won||wall[py][px]&(1<<d))return;px+=dx[d];py+=dy[d];draw();if(px===n-1&&py===n-1){won=true;burst(['💗','🎉','🐰','🌿'],50)}};
+  draw();$$('.dpad button').forEach(b=>b.onclick=()=>mv(+b.dataset.d));
+  const key=e=>{if(!live(cv)){document.removeEventListener('keydown',key);return}const d={ArrowUp:0,ArrowRight:1,ArrowDown:2,ArrowLeft:3}[e.key];if(d!==undefined){e.preventDefault();mv(d)}};document.addEventListener('keydown',key);
+  let sx,sy;cv.onpointerdown=e=>{sx=e.clientX;sy=e.clientY};cv.onpointerup=e=>{const a=e.clientX-sx,b=e.clientY-sy;if(Math.max(Math.abs(a),Math.abs(b))<20)return;mv(Math.abs(a)>Math.abs(b)?(a>0?1:3):(b>0?2:0))}}
+ else if(k==='stars'){page('Our Stars ✨','<p class="story">Watch the stars write your name… then send a wish to the sky.</p><canvas id="nm" width="360" height="200" style="width:min(420px,94vw)"></canvas><div class="wish"><input id="wi" maxlength="60" placeholder="Type a wish…"><button class="btn" id="wb">Send ✨</button></div>');
+  const cv=$('#nm'),c=cv.getContext('2d');
+  (document.fonts?document.fonts.load('64px Pacifico').catch(()=>{}):Promise.resolve()).then(()=>{const off=document.createElement('canvas');off.width=360;off.height=200;const o=off.getContext('2d');o.fillStyle='#fff';o.font='64px Pacifico, cursive';o.textAlign='center';o.textBaseline='middle';o.fillText('Priyasha ❤',180,100);
+   const d=o.getImageData(0,0,360,200).data,pts=[];for(let y=0;y<200;y+=4)for(let x=0;x<360;x+=4)if(d[(y*360+x)*4+3]>140)pts.push({x,y,sx:Math.random()*360,sy:Math.random()*200,p:Math.random()*6});
+   let t=0;(function f(){if(!live(cv))return;t+=.012;const e=1-Math.pow(1-Math.min(1,t),3);c.clearRect(0,0,360,200);c.fillStyle='#ffd37a';pts.forEach(q=>{c.globalAlpha=.55+.45*Math.sin(t*6+q.p);c.beginPath();c.arc(q.sx+(q.x-q.sx)*e,q.sy+(q.y-q.sy)*e,1.8,0,7);c.fill()});requestAnimationFrame(f)})()});
+  $('#wb').onclick=()=>{const l=document.createElement('div');l.className='lantern';l.style.left=(10+Math.random()*80)+'vw';l.append('🏮');const sm=document.createElement('small');sm.textContent=$('#wi').value.trim()||'a secret wish';l.append(sm);document.body.appendChild(l);setTimeout(()=>l.remove(),9000);$('#wi').value=''}}
+ else if(k==='booth'){page('Photo Booth 📸','<p class="story">Pick a photo of us and a frame, then download your cute picture.</p><label class="btn" style="display:inline-block">Choose photo<input id="bp" type="file" accept="image/*" hidden></label><div class="fr"><button class="opt fb" data-f="0">💗 Hearts</button><button class="opt fb" data-f="1">🌸 Flowers</button><button class="opt fb" data-f="2">⭐ Stars</button></div><canvas id="bc" width="480" height="600" style="width:min(300px,80vw);border-radius:12px;margin:12px 0"></canvas><br><a class="btn" id="bd" download="priyasha-and-me.png" style="display:inline-block;text-decoration:none">Download 💾</a>');
+  let img=null,fr=0;const c=$('#bc').getContext('2d'),E=[['💗','💖','💕'],['🌸','🌷','🌼'],['⭐','✨','🌟']];
+  const draw=()=>{c.fillStyle='#ffe3ee';c.fillRect(0,0,480,600);if(img){const z=Math.max(400/img.width,440/img.height),w=img.width*z,h=img.height*z;c.save();c.beginPath();(c.roundRect||c.rect).call(c,40,40,400,440,24);c.clip();c.drawImage(img,40+(400-w)/2,40+(440-h)/2,w,h);c.restore()}else{c.fillStyle='#ffffffaa';c.fillRect(40,40,400,440);c.fillStyle='#c4547c';c.font='24px sans-serif';c.textAlign='center';c.fillText('Choose a photo 📷',240,265)}
+   c.font='28px serif';c.textAlign='center';for(let i=0;i<12;i++){c.fillText(E[fr][i%3],30+i*38,30);c.fillText(E[fr][i%3],30+i*38,590)}for(let j=0;j<10;j++){c.fillText(E[fr][j%3],20,80+j*45);c.fillText(E[fr][j%3],460,80+j*45)}
+   c.fillStyle='#c4547c';c.font='34px Pacifico, cursive';c.fillText('Priyasha 💗',240,535);c.font='20px sans-serif';c.fillText('20 · 10 · 2026',240,568)};
+  draw();$('#bp').onchange=e=>{const im=new Image();im.onload=()=>{img=im;draw()};im.src=URL.createObjectURL(e.target.files[0])};
+  $$('.fb').forEach(b=>b.onclick=()=>{fr=+b.dataset.f;draw()});$('#bd').onclick=()=>{$('#bd').href=$('#bc').toDataURL('image/png')}}
+ else if(k==='bday'){const t=new Date(),ok=location.hash==='#bday'||(BDAY&&t.getMonth()+1===BDAY[0]&&t.getDate()===BDAY[1]);
+  if(!ok){page('Birthday Island 🎂','<p class="story">The island is wrapped in ribbons… 🎀<br>It opens on Priyasha’s birthday!</p><div style="font-size:90px">🔒</div>'+(BDAY?'':'<p class="hint">(Set her birthday in BDAY at the top of the file)</p>'));return}
+  page('Happy Birthday Priyasha! 🎂','<p class="story">Make a wish, then blow out the candles: tap each one, or use your breath!</p><div class="cake">🎂</div><div class="candles" id="cd"></div><button class="btn" id="mic">Blow with mic 🎤</button><div class="bubble" id="bm" style="margin:16px auto">Make a wish first… 🤫</div>');
+  let lit=5;const out=b=>{if(b.dataset.o)return;b.dataset.o=1;b.textContent='💨';if(!--lit){burst(['🎉','🎂','🎈','💖','✨'],70);$('#bm').textContent='Happy Birthday, my love! May all your wishes come true 💖 Coco & me'}};
+  for(let i=0;i<5;i++){const b=document.createElement('button');b.className='cdl';b.textContent='🕯️';b.onclick=()=>out(b);$('#cd').appendChild(b)}
+  $('#mic').onclick=async()=>{try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),ac=new(window.AudioContext||window.webkitAudioContext)(),an=ac.createAnalyser();ac.createMediaStreamSource(st).connect(an);const buf=new Uint8Array(an.fftSize);
+   (function l(){if(!live($('#cd'))||!lit){st.getTracks().forEach(x=>x.stop());return}an.getByteTimeDomainData(buf);let m=0;buf.forEach(v=>m=Math.max(m,Math.abs(v-128)));if(m>40){const b=$$('.cdl').find(x=>!x.dataset.o);b&&out(b)}setTimeout(l,350)})()}catch(e){$('#bm').textContent='The mic isn’t available, so just tap the candles 🕯️'}}}
+}
+[['story','📖','Our Story','told by Coco'],['film','🎞️','Memory Film','our photos'],['when','💌','Open When…','little letters'],['reasons','💗','Why I Love You','tap the heart'],['match','🧩','Memory Match','card game'],['maze','🌿','Love Maze','help Coco'],['stars','✨','Our Stars','make a wish'],['booth','📸','Photo Booth','cute frames'],['bday','🎂','Birthday Island','opens on her day']].forEach(([k,i,t,sub])=>{const b=document.createElement('button');b.className='portal';b.dataset.ch=k;b.innerHTML=`<span class="ico">${i}</span><b>${t}</b><small>${sub}</small>`;$('.map').appendChild(b)});
+$$('.portal').forEach(p=>p.onclick=()=>{const k=p.dataset.ch;isNaN(k)?openExtra(k):openChapter(+k)});
+$('#close').onclick=()=>$('#chap').classList.remove('on');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#chap').classList.remove('on')});
+</script>
+</body>
+</html>
